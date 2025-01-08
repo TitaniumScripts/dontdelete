@@ -1,0 +1,95 @@
+-- Importing the Orion library
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
+
+-- Creating the GUI
+local Window = OrionLib:MakeWindow({
+    Name = "Trade Scam by TitaniumScripts",
+    HidePremium = false,
+    SaveConfig = true,
+    ConfigFolder = "TradeScamConfig"
+})
+
+-- Variables for functions
+local isTradeFrozen = false
+local isAutoAcceptEnabled = false
+
+-- Function: Freeze Trade
+local function freezeTrade()
+    isTradeFrozen = not isTradeFrozen
+    if isTradeFrozen then
+        -- Code to freeze trades
+        game:GetService("Players").LocalPlayer.PlayerGui.ChildAdded:Connect(function(child)
+            if child.Name == "TradeGui" then
+                child:Destroy() -- Removes the trade GUI to "freeze" trades
+            end
+        end)
+        OrionLib:MakeNotification({
+            Name = "Freeze Trade",
+            Content = "Trades have been frozen.",
+            Image = "rbxassetid://4483345998",
+            Time = 5
+        })
+    else
+        OrionLib:MakeNotification({
+            Name = "Freeze Trade",
+            Content = "Trades have been unfrozen.",
+            Image = "rbxassetid://4483345998",
+            Time = 5
+        })
+    end
+end
+
+-- Function: Auto Accept
+local function autoAccept()
+    isAutoAcceptEnabled = not isAutoAcceptEnabled
+    if isAutoAcceptEnabled then
+        -- Code to automatically accept trades
+        game:GetService("Players").LocalPlayer.PlayerGui.ChildAdded:Connect(function(child)
+            if child.Name == "TradeGui" then
+                local acceptButton = child:FindFirstChild("AcceptButton")
+                if acceptButton then
+                    acceptButton:FireClickDetector() -- Auto-clicks the accept button
+                end
+            end
+        end)
+        OrionLib:MakeNotification({
+            Name = "Auto Accept",
+            Content = "Auto Accept enabled. All trades will be automatically accepted.",
+            Image = "rbxassetid://4483345998",
+            Time = 5
+        })
+    else
+        OrionLib:MakeNotification({
+            Name = "Auto Accept",
+            Content = "Auto Accept disabled.",
+            Image = "rbxassetid://4483345998",
+            Time = 5
+        })
+    end
+end
+
+-- Creating the tab for functions
+local Tab = Window:MakeTab({
+    Name = "Functions",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+-- Button: Freeze Trade
+Tab:AddButton({
+    Name = "Freeze Trade",
+    Callback = function()
+        freezeTrade()
+    end
+})
+
+-- Button: Auto Accept
+Tab:AddButton({
+    Name = "Auto Accept",
+    Callback = function()
+        autoAccept()
+    end
+})
+
+-- Initializing the GUI
+OrionLib:Init()
